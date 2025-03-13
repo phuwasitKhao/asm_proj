@@ -3,7 +3,6 @@ section .data
         NULL    equ     0
         STDIN   equ     0
         STRLEN  equ     50
-        STRLEN  equ     50
         STDOUT  equ     1
         STDERR  equ     2
         SYS_read  equ	0	
@@ -13,15 +12,13 @@ section .data
         newLine db      LF, NULL
 
 section .bss
-        buffer	resb	256	
-        fileName resb 256
-        fileName_buffer resb 256
+        buffer_input	resb	256	
         chr resb 1
+        inline resb STRLEN+2
         
 
 extern printString
-extern openInputFile
-extern openInputFile
+extern readInputFile
 
 section .text
 
@@ -29,29 +26,18 @@ global getInputFile
 getInputFile:
         mov rdi , msgInputFile
         call printString
-        ;mov rdi , STDIN
-        ;mov rsi , buffer
-        ;mov rax , SYS_read
-        ;mov rdx , fileName_buffer
-        ;syscall
-        ;mov rbx , inline
-        mov rbx , buffer
+        mov rbx , buffer_input
         mov r12 , 0
 
 readInput:
         mov rax , SYS_read
-        mov rdx , fileName_buffer
-        syscall
-
-readInput:
-        mov rax , SYS_read
         mov rdi , STDIN
-        lea rsi , byrte [chr]
+        lea rsi , byte [chr]
         mov rdx , 1
         syscall
 
         mov al , byte [chr]
-        cmp al , LF
+        cmp al , [newLine]
         je readDone
 
         inc r12
@@ -65,34 +51,8 @@ readInput:
 
 readDone:
         mov byte [rbx] , NULL
-        mov rdi , buffer
-        call openInputFile
-
-        ret
-
-; debugging input file
-;       mov	rsi , buffer
-;	mov	rax , SYS_write
-;	mov	rdi , STDOUT
-;	mov	rdx , 10
-        
-        mov al , byte [chr]
-        cmp al , LF
-        je readDone
-
-        inc r12
-        cmp r12 , STRLEN
-        jae readInput
-
-        mov byte [rbx] , al
-        inc rbx
-
-        jmp readInput
-
-readDone:
-        mov byte [rbx] , NULL
-        mov rdi , buffer
-        call openInputFile
+        mov rdi , buffer_input
+        call readInputFile
 
         ret
 
@@ -103,4 +63,3 @@ readDone:
 ;	mov	rdx , 10
         
 	syscall	
-

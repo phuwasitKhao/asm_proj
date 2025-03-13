@@ -29,9 +29,7 @@ section .text
 _start:
 
     call getInputFile
-    ;mov rdi, msgReading
-    ;call openInputFile
-
+    
     call getOutputFile
 
     call getKey
