@@ -3,6 +3,7 @@ section .data
         NULL    equ     0
         STDIN   equ     0
         STRLEN  equ     50
+        STRLEN  equ     50
         STDOUT  equ     1
         STDERR  equ     2
         SYS_read  equ	0	
@@ -20,6 +21,7 @@ section .bss
 
 extern printString
 extern openInputFile
+extern openInputFile
 
 section .text
 
@@ -27,8 +29,16 @@ global getInputFile
 getInputFile:
         mov rdi , msgInputFile
         call printString
-        mov rdi , STDIN
-        mov rsi , buffer
+        ;mov rdi , STDIN
+        ;mov rsi , buffer
+        ;mov rax , SYS_read
+        ;mov rdx , fileName_buffer
+        ;syscall
+        ;mov rbx , inline
+        mov rbx , buffer
+        mov r12 , 0
+
+readInput:
         mov rax , SYS_read
         mov rdx , fileName_buffer
         syscall
@@ -40,6 +50,32 @@ readInput:
         mov rdx , 1
         syscall
 
+        mov al , byte [chr]
+        cmp al , LF
+        je readDone
+
+        inc r12
+        cmp r12 , STRLEN
+        jae readInput
+
+        mov byte [rbx] , al
+        inc rbx
+
+        jmp readInput
+
+readDone:
+        mov byte [rbx] , NULL
+        mov rdi , buffer
+        call openInputFile
+
+        ret
+
+; debugging input file
+;       mov	rsi , buffer
+;	mov	rax , SYS_write
+;	mov	rdi , STDOUT
+;	mov	rdx , 10
+        
         mov al , byte [chr]
         cmp al , LF
         je readDone
