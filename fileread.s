@@ -34,12 +34,13 @@ db LF, LF, NULL
 fileDescrip 	dq 0
 errMsgOpen 	db "Error opening the file.", LF, NULL
 errMsgRead 	db "Error reading from the file.", LF, NULL
+;fileName 	db "test.txt", NULL
 
 extern printString
 ; -------------------------------------------------------
 section .bss
 
-filename 	resb 256
+fileName 	resb 256
 byte_read 	resd 1
 readBuffer 	resb BUFF_SIZE
 ; -------------------------------------------------------
@@ -61,7 +62,7 @@ global openInputFile
 ; operations (read, write, close).
 openInputFile:
 	mov rax, SYS_open ; file open
-	mov rdi, filename 
+	;mov rdi, fileName ; file name string
 	mov rsi, O_RDONLY ; read only access
 	syscall ; call the kernel
 	cmp rax, 0 ; check for success
