@@ -29,9 +29,8 @@ section .text
 _start:
 
     call getInputFile
-    mov rdi, msgReading
-    call printString
-    call openInputFile
+    ;mov rdi, msgReading
+    ;call openInputFile
 
     call getOutputFile
 
