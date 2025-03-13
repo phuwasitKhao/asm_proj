@@ -2,6 +2,7 @@ section .data
         LF      equ     10
         NULL    equ     0
         STDIN   equ     0
+        STRLEN  equ     50
         STDOUT  equ     1
         STDERR  equ     2
         SYS_read  equ	0	
@@ -11,9 +12,11 @@ section .data
         newLine db      LF, NULL
 
 section .bss
-buffer	resb	256	
-fileName resb 256
-
+        buffer	resb	256	
+        fileName resb 256
+        fileName_buffer resb 256
+        chr resb 1
+        
 
 extern printString
 extern openInputFile
@@ -26,36 +29,42 @@ getInputFile:
         call printString
         mov rdi , STDIN
         mov rsi , buffer
-        ;mov fileName , r9
         mov rax , SYS_read
-        mov rdx , 10
+        mov rdx , fileName_buffer
         syscall
 
-        mov	rsi , buffer
-	mov	rax , SYS_write
-	mov	rdi , STDOUT
-	mov	rdx , 10
-        
-	syscall	
-        mov rcx, buffer
-        mov rdi, buffer     ; Correctly pass filename address
+readInput:
+        mov rax , SYS_read
+        mov rdi , STDIN
+        lea rsi , byrte [chr]
+        mov rdx , 1
+        syscall
+
+        mov al , byte [chr]
+        cmp al , LF
+        je readDone
+
+        inc r12
+        cmp r12 , STRLEN
+        jae readInput
+
+        mov byte [rbx] , al
+        inc rbx
+
+        jmp readInput
+
+readDone:
+        mov byte [rbx] , NULL
+        mov rdi , buffer
         call openInputFile
 
-strCountLoop:
-        cmp     byte [rbx], 10        ;calculate string length
-        je      strCountDone
-        inc     rdx
-        inc     rbx
-        jmp     strCountLoop
-strCountDone:
-        cmp     rdx, 0
-        je      prtDone
-        mov     rax, SYS_write          ;write to console
-        mov     rsi, rdi
-        mov     rdi, STDOUT
-        syscall
-prtDone:
-        pop     rbx
         ret
 
+; debugging input file
+;       mov	rsi , buffer
+;	mov	rax , SYS_write
+;	mov	rdi , STDOUT
+;	mov	rdx , 10
+        
+	syscall	
 
