@@ -13,9 +13,8 @@ section .data
 
 section .bss
         buffer	resb	256	
-        fileName resb 256
-        fileName_buffer resb 256
         chr resb 1
+        inline resb STRLEN+2
         
 
 extern printString
@@ -27,16 +26,19 @@ global getInputFile
 getInputFile:
         mov rdi , msgInputFile
         call printString
-        mov rdi , STDIN
-        mov rsi , buffer
-        mov rax , SYS_read
-        mov rdx , fileName_buffer
-        syscall
+        ;mov rdi , STDIN
+        ;mov rsi , buffer
+        ;mov rax , SYS_read
+        ;mov rdx , fileName_buffer
+        ;syscall
+        ;mov rbx , inline
+        mov rbx , buffer
+        mov r12 , 0
 
 readInput:
         mov rax , SYS_read
         mov rdi , STDIN
-        lea rsi , byrte [chr]
+        lea rsi , byte [chr]
         mov rdx , 1
         syscall
 
@@ -67,4 +69,3 @@ readDone:
 ;	mov	rdx , 10
         
 	syscall	
-
