@@ -34,13 +34,17 @@ db LF, LF, NULL
 fileDescrip 	dq 0
 errMsgOpen 	db "Error opening the file.", LF, NULL
 errMsgRead 	db "Error reading from the file.", LF, NULL
+
+extern printString
 ; -------------------------------------------------------
 section .bss
+
+filename 	resb 256
+byte_read 	resd 1
 readBuffer 	resb BUFF_SIZE
 ; -------------------------------------------------------
 section .text
-global _start
-_start:
+global openInputFile
 ; -----
 ; Display header line...
 ; Attempt to open file - Use system service for file open
@@ -57,7 +61,7 @@ _start:
 ; operations (read, write, close).
 openInputFile:
 	mov rax, SYS_open ; file open
-	mov rdi, fileName ; file name string
+	mov rdi, filename 
 	mov rsi, O_RDONLY ; read only access
 	syscall ; call the kernel
 	cmp rax, 0 ; check for success
@@ -97,7 +101,7 @@ openInputFile:
 	mov rax, SYS_close
 	mov rdi, qword [fileDescrip]
 	syscall
-	jmp exampleDone
+	jmp readDone
 ; -----
 ; Error on open.
 ; note, eax contains an error code which is not used
@@ -105,16 +109,15 @@ openInputFile:
 errorOnOpen:
 	mov rdi, errMsgOpen
 	call printString
-	jmp exampleDone
+	jmp readDone
 ; Error on read.
 ; note, eax contains an error code which is not used
 ; for this example.
 errorOnRead:
 	mov rdi, errMsgRead
 	call printString
-	jmp exampleDone
+	jmp readDone
 ; -----
 readDone:
 	mov rax, SYS_exit
-	mov rdi, EXIT_SUCCESS
 	syscall

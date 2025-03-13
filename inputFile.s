@@ -29,13 +29,13 @@ getInputFile:
         mov rdx , 10
         syscall
 
-
         mov	rsi , buffer
 	mov	rax , SYS_write
 	mov	rdi , STDOUT
 	mov	rdx , 10
-    	
+        mov     rax , rdi
+
 	syscall	
     
-
+        ret 
 

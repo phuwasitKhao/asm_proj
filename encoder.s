@@ -22,14 +22,16 @@ section.data
 extern getInputFile
 extern getOutputFile
 extern getKey
-extern readInputFile
+extern openInputFile
+extern printString
 
 section .text
 _start:
 
     call getInputFile
-    mov rdi, rax
-    call readInputFile
+    mov rdi, msgReading
+    call printString
+    call openInputFile
 
     call getOutputFile
 
