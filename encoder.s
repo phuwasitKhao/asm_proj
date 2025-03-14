@@ -22,8 +22,6 @@ section.data
 extern getInputFile
 extern getOutputFile
 extern getKey
-extern openInputFile
-extern printString
 
 section .text
 _start:
@@ -32,6 +30,4 @@ _start:
     
     call getOutputFile
 
-    call getKey
 
-    syscall

@@ -9,6 +9,7 @@ global printString
 
 printString:
         push    rbx
+        ; count characters in string
         mov     rbx, rdi
         mov     rdx, 0
 strCountLoop:
@@ -20,6 +21,7 @@ strCountLoop:
 strCountDone:
         cmp     rdx, 0
         je      prtDone
+        ; Call OS to output string
         mov     rax, SYS_write          ;write to console
         mov     rsi, rdi
         mov     rdi, STDOUT

@@ -9,13 +9,9 @@ section .data
         SYS_write equ   1
         msgInputFile     db      "Enter input file name: ", NULL
 
-        newLine db      LF, NULL
-
 section .bss
-        buffer_input	resb	256	
-        chr resb 1
-        inline resb STRLEN+2
-        
+        buffer_file_input	resb	256	
+        chr resb 1        
 
 extern printString
 extern readInputFile
@@ -26,18 +22,19 @@ global getInputFile
 getInputFile:
         mov rdi , msgInputFile
         call printString
-        mov rbx , buffer_input
-        mov r12 , 0
-
+        mov rbx , buffer_file_input
+        ;mov rbx , buffer_input
+        xor r12 , r12
+        
 readInput:
-        mov rax , SYS_read
-        mov rdi , STDIN
-        lea rsi , byte [chr]
+        mov rax , SYS_read ; read from keyboard
+        mov rdi , STDIN ; accept input from keyboard
+        lea rsi , byte [chr] 
         mov rdx , 1
         syscall
 
         mov al , byte [chr]
-        cmp al , [newLine]
+        cmp al , LF
         je readDone
 
         inc r12
@@ -51,15 +48,7 @@ readInput:
 
 readDone:
         mov byte [rbx] , NULL
-        mov rdi , buffer_input
-        call readInputFile
-
+        mov rdi , buffer_file_input
+        call readInputFile  
         ret
 
-; debugging input file
-;       mov	rsi , buffer
-;	mov	rax , SYS_write
-;	mov	rdi , STDOUT
-;	mov	rdx , 10
-        
-	syscall	

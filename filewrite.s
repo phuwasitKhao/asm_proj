@@ -111,6 +111,8 @@ errorOnOpen:
 	mov rdi, errMsgOpen
 	call printString
 	mov rax, SYS_exit
+    xor rdi, rdi
+    syscall
 ; -----
 ; Error on write.
 ; note, rax contains an error code which is not used for this example.
@@ -118,7 +120,9 @@ errorOnWrite:
 	mov rdi, errMsgWrite
 	call printString
 	mov rax, SYS_exit
+    xor rdi, rdi
+    syscall
 ; -----
 ; Example program done.
 writeDone:
-	syscall
+    ret

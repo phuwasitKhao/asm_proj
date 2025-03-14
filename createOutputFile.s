@@ -14,7 +14,6 @@ section .data
 section .bss
         buffer_output	resb	256
         chr resb 1
-        inline resb  STRLEN+2	
 
 extern printString
 extern writeToOutputFile
@@ -28,7 +27,7 @@ getOutputFile:
         mov rbx , buffer_output
         mov r12 , 0
 
-readInput:
+readStringPrompt:
         mov rax , SYS_read
         mov rdi , STDIN
         lea rsi , byte [chr]
@@ -37,28 +36,20 @@ readInput:
 
         mov al , byte [chr]
         cmp al , [newLine]
-        je readDone
+        je DoneRead
 
         inc r12
         cmp r12 , STRLEN
-        jae readInput
+        jae readStringPrompt
 
         mov byte [rbx] , al
         inc rbx
 
-        jmp readInput
+        jmp readStringPrompt
 
-readDone:
+DoneRead:
         mov byte [rbx] , NULL
         mov rdi , buffer_output
         call writeToOutputFile
 
         ret
-
-; debugging input file
-;       mov	rsi , buffer
-;	mov	rax , SYS_write
-;	mov	rdi , STDOUT
-;	mov	rdx , 10
-        
-	syscall	
