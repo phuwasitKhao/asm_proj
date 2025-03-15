@@ -84,8 +84,7 @@ writeToOutputFile:
 ; if success -> rax = count of characters actually read
 	mov rax, SYS_write
 	mov rdi, qword [fileDescrip]
- 
-  mov rsi , r9
+    mov rsi , r9
 	mov rdx, writeBuffer
     syscall
 	cmp rax, 0
