@@ -23,7 +23,6 @@ getInputFile:
         mov rdi , msgInputFile
         call printString
         mov rbx , buffer_file_input
-        ;mov rbx , buffer_input
         xor r12 , r12
         
 readInput:

@@ -1,18 +1,8 @@
 global _start
 
 section.data
-    STDOUT	equ	1
-    STDERR 	equ	2	
-    SYS_write equ 1
 
-    div_ANS dq 0
-    div_rem dq 0
 
-    dot db "."
-    ENDLINE db "",10
-    four_zero db "0000",10
-    zero db "0"
-    const10 dq 10
     
 
     msgReading db "Reading input file...OK"
@@ -22,6 +12,7 @@ section.data
 extern getInputFile
 extern getOutputFile
 extern getKey
+extern printString
 
 section .text
 _start:
@@ -30,4 +21,15 @@ _start:
     
     call getOutputFile
 
+   ; call getKey
 
+    mov rdi , msgReading
+    call printString 
+
+    mov rdi , msgGenerating
+    call printString
+
+    mov rax , 60
+    xor rdi , rdi
+    syscall
+    

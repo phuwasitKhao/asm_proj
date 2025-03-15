@@ -9,12 +9,15 @@ section .data
         STRLEN  equ     50
         msgOutputFile     db      "Enter output file name: ", NULL
 
-        newLine db      LF, NULL
 
 section .bss
         buffer_output	resb	256
 
+extern printString
 
-global algorithm
-algorithm:
+global algorithm1
+algorithm1:
+  mov rdi , r15
+  call printString
+  ret
     

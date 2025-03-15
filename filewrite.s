@@ -30,13 +30,13 @@ section .data
     ; Variables for main.
     BUFF_SIZE    equ 1024
     newLine db LF, NULL
-	db LF, LF, NULL
-	db LF, NULL
+	  db LF, LF, NULL
+	  db LF, NULL
     fileDescrip 	dq 0
     errMsgOpen 	db "Error opening file.", LF, NULL
     errMsgWrite 	db "Error writing to file.", LF, NULL
-    url 	db "12345"
-    len 	dq $-url
+    ;url 	db "12345"
+    ;len 	dq $-url
     
 
 ;--------------------------------------------------------
@@ -45,8 +45,6 @@ extern printString
 
 section .bss
 
-fileName 	resb 256
-byte_read 	resd 1
 writeBuffer 	resb BUFF_SIZE
 
 
@@ -67,7 +65,6 @@ global writeToOutputFile
 ; file operations (read, write, close).
 writeToOutputFile:
 	mov rax, SYS_creat ; file open/create
-	;mov rdi, fileName ; file name string
 	mov rsi, S_IRUSR | S_IWUSR ; allow read/write
 	syscall ; call the kernel
 	cmp rax, 0 ; check for success
@@ -87,8 +84,9 @@ writeToOutputFile:
 ; if success -> rax = count of characters actually read
 	mov rax, SYS_write
 	mov rdi, qword [fileDescrip]
-	mov rsi, url
-	mov rdx, qword [len]
+ 
+  mov rsi , r9
+	mov rdx, writeBuffer
     syscall
 	cmp rax, 0
 	jl errorOnWrite

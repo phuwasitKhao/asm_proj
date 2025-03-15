@@ -9,14 +9,13 @@ section .data
         STRLEN  equ     50
         msgOutputFile     db      "Enter output file name: ", NULL
 
-        newLine db      LF, NULL
-
 section .bss
         buffer_output	resb	256
         chr resb 1
 
 extern printString
 extern writeToOutputFile
+extern getKey
 
 section .text
 
@@ -35,8 +34,8 @@ readStringPrompt:
         syscall
 
         mov al , byte [chr]
-        cmp al , [newLine]
-        je DoneRead
+        cmp al , LF
+        je .readDone
 
         inc r12
         cmp r12 , STRLEN
@@ -47,9 +46,10 @@ readStringPrompt:
 
         jmp readStringPrompt
 
-DoneRead:
+.readDone:
         mov byte [rbx] , NULL
         mov rdi , buffer_output
+        ;call getKey
+        ;ret
         call writeToOutputFile
-
         ret

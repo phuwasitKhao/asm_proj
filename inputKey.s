@@ -25,6 +25,9 @@ section .bss
     chr resb 1        
      
 extern printString
+extern algorithm1
+extern algorithm
+  
 
 section .text
 
@@ -57,7 +60,8 @@ readInput:
 
 readDone:
         mov byte [rbx] , NULL
-        mov rdi , buffer_key
-        mov rax , rdi
-
+        mov r15 , buffer_key
+        call algorithm1
+        ;mov rdi , r15  
+        ;call algorithm
         ret

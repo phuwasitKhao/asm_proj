@@ -81,7 +81,7 @@ readInputFile:
 ; add the NULL for the print string
 	mov rsi, readBuffer
 	mov byte [rsi+rax], NULL
-	mov rdi, readBuffer
+	mov r9, readBuffer
 	;call printString
 ; -----
 ; Close the file.
