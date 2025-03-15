@@ -7,17 +7,16 @@ section .data
         STDERR  equ     2
         SYS_read  equ	0	
         SYS_write equ   1
-
+        SYS_exit equ 60
         msgInputKey      db      "Enter key (max. 3 characters): " , NULL
-
+        msgErrorEnterKey db      "Error: Enter key (max. 3 characters): ", NULL
     ;msgReading       db      "Reading input file...OK", NULL
         
     ;msgGenerating    db      "Generating output file...OK", NULL
 
     ;msgErrorEnterKey db      "Error: Enter key (max. 3 characters): ", NULL
 
-        newLine db      LF, NULL
-    
+        max_input_key equ 3 
 
 
 section .bss
@@ -46,10 +45,12 @@ readInput:
         syscall
 
         mov al , byte [chr] ; get character just read   
-        cmp al , [newLine] ; linefeed , input done
+        cmp al , LF ; linefeed , input done
         je readDone
 
         inc r12
+        cmp r12 , max_input_key
+        jg maxInputErr
         cmp r12 , STRLEN
         jae readInput
 
@@ -61,7 +62,17 @@ readInput:
 readDone:
         mov byte [rbx] , NULL
         mov r15 , buffer_key
-        call algorithm1
+        ;call printString
         ;mov rdi , r15  
-        ;call algorithm
+        call algorithm
         ret
+
+
+
+maxInputErr:
+     	mov rdi, msgErrorEnterKey
+    	call printString
+	    mov rax, SYS_exit
+      xor rdi, rdi
+      syscall
+ 

@@ -17,7 +17,7 @@ extern printString
 
 global algorithm1
 algorithm1:
-  mov rdi , r15
-  call printString
-  ret
+;mov rdi , r15
+  ;call printString
+  ;ret
     

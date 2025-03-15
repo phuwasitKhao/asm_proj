@@ -49,7 +49,13 @@ readStringPrompt:
 .readDone:
         mov byte [rbx] , NULL
         mov rdi , buffer_output
-        ;call getKey
-        ;ret
+        mov r13 , rdi
+        call getKey
         call writeToOutputFile
         ret
+        ;jmp writeFileEn
+
+
+writeFileEn:
+      call writeToOutputFile  
+      

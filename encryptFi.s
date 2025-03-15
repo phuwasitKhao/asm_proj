@@ -1,94 +1,71 @@
+
 section .data
-    message db 'g', 0        ; message to be encrypted
-    key db 'A', 0                ; Encryption key 
+
+      NULL equ 0
 
 section .bss
-    encrypted resb 256             ; buffer for encrypted output 
+    encrypted resb 1024         
 
+extern printString
+  
 section .text
 global algorithm
-
+; store encryption data in rax
 algorithm:
-    ; cal string length 
-    call stringlen                 ; call function get string length
-    mov r15, rax                   ; store message length in r15 register
-    mov rsi, rax                   ; store message length in rsi register
+    cmp r9, 0
+    jne use_plain
+    lea r9, [r9]
+use_plain:
+    cmp r15, 0
+    jne use_key
+    lea r15, [r15]
+use_key:
+    ; len plaintext and key
+    mov rdi, r9
+    call stringlen        ; rax = plaintext length
+    mov rbx, rax          ; rbx = length ของข้อความ
 
-    ; cal key length
     mov rdi, r15
-    call stringlen                 ; call function get stringlen  length
-    mov r10, rax                   ; store key length in r10 register
-    
-    ; setup parameters for encryption 
-    mov     rdi, message             ; 1st parameter: pointer to original message
-    lea     rcx, [encrypted]         ; 2nd parameter: pointer to output buffer
-    mov     rdx, key                 ; 3rd parameter: pointer to encryption key
+    call stringlen        ; rax = key length
+    mov rcx, rax          ; rcx = key length
 
-    call    encriptCore              ; call the encryption function
+    ; initial state 
+    xor r8, r8            
+    lea rsi, [encrypted]  ; rsi = pointer output buffer
 
-    ;show encrypted result
-    mov rax, 1                   
-    mov rdi, 1                    
-    lea rsi, [encrypted]          
-    mov rdx, r15                  
-    syscall                      
+en_loop:
+    cmp rbx, NULL
+    je en_done
 
-    ; exit the program
-    mov rax, 60                   
-    xor rdi, rdi                  
-    syscall
+    mov al, [r9]          ; load string Input per byte
+    mov dl, [r15 + r8]    ; load string Key per byte
+    xor al, dl           
+    mov [rsi], al       
 
-encriptCore:
-    push    rbx                   
-    push    r8
-    push    r9
-    push    r11
-      
-    mov     r8, rdi               ; r8 = pointer to input message
-    mov     r9, rcx               ; r9 = pointer to output buffer
-    mov     rcx, rsi              ; rcx = message length
-    xor     rbx, rbx              ; rbx = ตัวนับสำหรับ key
-    
-encode_loop:
-    cmp     rcx, 0                ; check if message length is 0
-    je      end_encode            ; exit loop if message length is 0
+    inc r9                
+    inc rsi               
+    dec rbx               
+    inc r8            
+    cmp r8, rcx          
+    jl no_reset
+    xor r8, r8           ; reset key index
+no_reset:
+    jmp en_loop
 
-    mov     al, [r8]              ; load current message byte
-    movzx   r11, byte [rdx + rbx] ; load current key byte
-    xor     al, r11b              ; xor message byte with key byte
-    mov     [r9], al              ; store result in output buffer
-
-    inc     r8                    ; move to next byte in message buffer
-    inc     r9                    ; move to next byte in output buffer
-    inc     rbx                   ; move to next byte in key buffer
-    cmp     rbx, r10              ; check if key index reached key length
-    jne     skip_key_reset
-    xor     rbx, rbx              ; reset key index to 0
-    
-skip_key_reset:
-    dec     rcx                   ; decrement message length
-    jmp     encode_loop           ; repeat loop
-
-end_encode:
-    pop     r11
-    pop     r9
-    pop     r8
-    pop     rbx
+en_done:
+    mov byte [rsi], NULL
+    lea rax, [encrypted] 
+    mov r14 , rax  
     ret
 
-
+; calc string len
 stringlen:
-    push    rcx
-    push    rdi
-    xor     rax, rax              
-    mov     rcx, -1               
-    repnz   scasb                 
-    mov     rax, -2               
-    sub     rax, rcx              
-    pop     rdi
-    pop     rcx
+    xor rax, rax
+len_loop:
+  cmp byte [rdi+rax], NULL
+    je len_done
+    inc rax
+    jmp len_loop
+len_done:
     ret
 
-; yasm -f elf64 encryptFi.s -o encryptFi.o
-; ld encryptFi.o -o encryptFi
-; ./encryptFi

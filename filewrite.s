@@ -66,7 +66,8 @@ global writeToOutputFile
 writeToOutputFile:
 	mov rax, SYS_creat ; file open/create
 	mov rsi, S_IRUSR | S_IWUSR ; allow read/write
-	syscall ; call the kernel
+	mov rdi , r13
+  syscall ; call the kernel
 	cmp rax, 0 ; check for success
 	jl errorOnOpen
 	mov qword [fileDescrip], rax ; save descriptor
@@ -84,8 +85,8 @@ writeToOutputFile:
 ; if success -> rax = count of characters actually read
 	mov rax, SYS_write
 	mov rdi, qword [fileDescrip]
-    mov rsi , r9
-	mov rdx, writeBuffer
+    mov rsi , r14
+	
     syscall
 	cmp rax, 0
 	jl errorOnWrite

@@ -23,11 +23,11 @@ _start:
 
    ; call getKey
 
-    mov rdi , msgReading
-    call printString 
+    ;mov rdi , msgReading
+    ;call printString 
 
-    mov rdi , msgGenerating
-    call printString
+    ;mov rdi , msgGenerating
+    ;call printString
 
     mov rax , 60
     xor rdi , rdi
