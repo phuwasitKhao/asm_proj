@@ -9,7 +9,7 @@ section .data
         SYS_write equ   1
         SYS_exit equ 60
         msgInputKey      db      "Enter key (max. 3 characters): " , NULL
-        msgErrorEnterKey db      "Error: Enter key (max. 3 characters): ", NULL
+        msgErrorEnterKey db      "Error: Enter key (max. 3 characters)", NULL
     ;msgReading       db      "Reading input file...OK", NULL
         
     ;msgGenerating    db      "Generating output file...OK", NULL
@@ -17,7 +17,7 @@ section .data
     ;msgErrorEnterKey db      "Error: Enter key (max. 3 characters): ", NULL
 
         max_input_key equ 3 
-
+        newLine db LF , NULL
 
 section .bss
     buffer_key	resb	255	   
@@ -62,16 +62,13 @@ readInput:
 readDone:
         mov byte [rbx] , NULL
         mov r15 , buffer_key
-        ;call printString
-        ;mov rdi , r15  
         call algorithm
         ret
-
-
 
 maxInputErr:
      	mov rdi, msgErrorEnterKey
     	call printString
+      mov rdi , newLine
 	    mov rax, SYS_exit
       xor rdi, rdi
       syscall

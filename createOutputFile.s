@@ -8,6 +8,10 @@ section .data
         SYS_write equ   1
         STRLEN  equ     50
         msgOutputFile     db      "Enter output file name: ", NULL
+        msgReadingInput db "Reading input file...OK",NULL
+        msgGenerating db "Generating output file...OK",NULL
+        newLine db LF, NULL
+
 
 section .bss
         buffer_output	resb	256
@@ -48,14 +52,20 @@ readStringPrompt:
 
 .readDone:
         mov byte [rbx] , NULL
-        mov rdi , buffer_output
-        mov r13 , rdi
+        mov r13 , buffer_output
         call getKey
         call writeToOutputFile
         ret
-        ;jmp writeFileEn
 
 
-writeFileEn:
-      call writeToOutputFile  
-      
+success:
+        mov rdi , msgReadingInput
+        call printString
+    
+        mov rdi , newLine
+        call printString
+
+        mov rdi , msgGenerating
+        call printString
+       
+        

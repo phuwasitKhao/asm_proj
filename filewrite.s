@@ -35,9 +35,7 @@ section .data
     fileDescrip 	dq 0
     errMsgOpen 	db "Error opening file.", LF, NULL
     errMsgWrite 	db "Error writing to file.", LF, NULL
-    ;url 	db "12345"
-    ;len 	dq $-url
-    
+    msgGenerating db "Generating output file...OK",LF,NULL
 
 ;--------------------------------------------------------
 
@@ -85,14 +83,12 @@ writeToOutputFile:
 ; if success -> rax = count of characters actually read
 	mov rax, SYS_write
 	mov rdi, qword [fileDescrip]
-    mov rsi , r14
-	
-    syscall
+  mov rsi , r14
+
+  syscall
 	cmp rax, 0
 	jl errorOnWrite
 	mov rdi, writeDone
-	;; รอไป call algo สำหรับ encrypt
-    ;;call printString
 ; -----
 ; Close the file.
 ; System Service - close
@@ -123,4 +119,4 @@ errorOnWrite:
 ; -----
 ; Example program done.
 writeDone:
-    ret
+  ret

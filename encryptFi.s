@@ -1,4 +1,3 @@
-
 section .data
 
       NULL equ 0
@@ -12,7 +11,6 @@ section .text
 global algorithm
 ; store encryption data in rax
 algorithm:
-    cmp r9, 0
     jne use_plain
     lea r9, [r9]
 use_plain:
