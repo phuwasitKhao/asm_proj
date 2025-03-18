@@ -24,8 +24,7 @@ section .bss
     chr resb 1        
      
 extern printString
-extern algorithm1
-extern algorithm
+extern xor_algorithm
   
 
 section .text
@@ -62,7 +61,7 @@ readInput:
 readDone:
         mov byte [rbx] , NULL
         mov r15 , buffer_key
-        call algorithm
+        call xor_algorithm
         ret
 
 maxInputErr:

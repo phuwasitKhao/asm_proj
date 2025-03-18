@@ -26,7 +26,7 @@ echo yasm decryptor
 yasm -f elf64 -g dwarf2 -o decryptor.o decryptor.s
 
 echo linkfile
-ld -o encryptor encryptor.o inputFile.o  createOutputFile.o fileread.o filewrite.o printString.o encryptFi.o inputKey.o decryptor.o   
+ld -o encryptor encryptor.o inputFile.o  createOutputFile.o fileread.o filewrite.o printString.o en_de_cryptFunc.o inputKey.o
 echo "---------------- run file ----------------"
 echo "------------------------------------------"
 ./encryptor

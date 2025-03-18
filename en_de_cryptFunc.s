@@ -8,16 +8,9 @@ section .bss
 extern printString
   
 section .text
-global algorithm
+global xor_algorithm
 ; store encryption data in rax
-algorithm:
-    jne use_plain
-    lea r9, [r9]
-use_plain:
-    cmp r15, 0
-    jne use_key
-    lea r15, [r15]
-use_key:
+xor_algorithm:
     ; len plaintext and key
     mov rdi, r9
     call stringlen        ; rax = plaintext length
@@ -60,7 +53,7 @@ en_done:
 stringlen:
     xor rax, rax
 len_loop:
-  cmp byte [rdi+rax], NULL
+    cmp byte [rdi+rax], NULL
     je len_done
     inc rax
     jmp len_loop
