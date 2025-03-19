@@ -35,7 +35,6 @@ section .data
     fileDescrip 	dq 0
     errMsgOpen 	db "Error opening file.", LF, NULL
     errMsgWrite 	db "Error writing to file.", LF, NULL
-    msgGenerating db "Generating output file...OK",LF,NULL
 
 ;--------------------------------------------------------
 
@@ -102,21 +101,21 @@ writeToOutputFile:
 ; Error on open.
 ; note, rax contains an error code which is not used for this example.
 errorOnOpen:
-	mov rdi, errMsgOpen
-	call printString
-	mov rax, SYS_exit
+	  mov rdi, errMsgOpen
+	  call printString
+	  mov rax, SYS_exit
     xor rdi, rdi
     syscall
 ; -----
 ; Error on write.
 ; note, rax contains an error code which is not used for this example.
 errorOnWrite:
-	mov rdi, errMsgWrite
-	call printString
-	mov rax, SYS_exit
+	  mov rdi, errMsgWrite
+	  call printString
+	  mov rax, SYS_exit
     xor rdi, rdi
     syscall
 ; -----
 ; Example program done.
 writeDone:
-  ret
+    ret

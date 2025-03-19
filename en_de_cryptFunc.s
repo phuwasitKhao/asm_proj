@@ -14,11 +14,11 @@ xor_algorithm:
     ; len plaintext and key
     mov rdi, r9
     call stringlen        ; rax = plaintext length
-    mov rbx, rax          ; rbx = length ของข้อความ
+    mov rbx, rax        
 
     mov rdi, r15
     call stringlen        ; rax = key length
-    mov rcx, rax          ; rcx = key length
+    mov rcx, rax        
 
     ; initial state 
     xor r8, r8            

@@ -10,11 +10,6 @@ section .data
         SYS_exit equ 60
         msgInputKey      db      "Enter key (max. 3 characters): " , NULL
         msgErrorEnterKey db      "Error: Enter key (max. 3 characters)", NULL
-    ;msgReading       db      "Reading input file...OK", NULL
-        
-    ;msgGenerating    db      "Generating output file...OK", NULL
-
-    ;msgErrorEnterKey db      "Error: Enter key (max. 3 characters): ", NULL
 
         max_input_key equ 3 
         newLine db LF , NULL
@@ -65,10 +60,10 @@ readDone:
         ret
 
 maxInputErr:
-     	mov rdi, msgErrorEnterKey
-    	call printString
-      mov rdi , newLine
-	    mov rax, SYS_exit
-      xor rdi, rdi
-      syscall
+       	mov rdi, msgErrorEnterKey
+      	call printString
+        mov rdi , newLine
+	      mov rax, SYS_exit
+        xor rdi, rdi
+        syscall
  
